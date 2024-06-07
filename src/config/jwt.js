@@ -1,27 +1,30 @@
 const jwt = require("jsonwebtoken");
 
-var secratekey = "shgdvcs6v4s68fv4sv46f8f";
+const fallbackSecretKey = "h6$RdP2qL@v8#eZuF9&w";
 
 const tokken = (req, res, next) => {
-  let token = req.headers.authorization?.split(" ")[1];
+  const token = req.headers.authorization?.split(" ")[1];
   if (!token) {
-    let token = {
+    const errorResponse = {
       status: false,
-      message: "no authentication",
+      message: "No authentication token provided",
     };
-    return res.status(401).json(token);
+    return res.status(401).json(errorResponse);
   }
   try {
-    let decode = jwt.verify(token, secratekey);
-    let userid = decode.userid;
+    const decode = jwt.verify(token, fallbackSecretKey);
+    const userid = decode.userid;
     req.userid = userid;
     next();
   } catch (error) {
-    let errormessage = {
+    const errorMessage = {
       status: false,
-      message: "error in tokken",
+      message: "Error in token authentication",
     };
-    return res.status(403).json(errormessage);
+    return res.status(403).json(errorMessage);
   }
 };
+
 module.exports = tokken;
+
+module.exports = "skfbhksgb237r6343f3i75^$%^&";

@@ -1,22 +1,20 @@
 const mongoose = require("mongoose");
 
 let mongooseschama = mongoose.Schema({
-  name: {
-    type: String,
-    required: true,
-    unique: true,
+  Experience: {
+    type: Number,
+    required: false,
   },
-  email: {
-    type: String,
-    required: true,
-    unique: true,
+  Project: {
+    type: Number,
+    required: false,
   },
-  message: {
-    type: String,
-    required: true,
+  Clients: {
+    type: Number,
+    required: false,
   },
 });
 
-const mongoosemodel = mongoose.model("newdata", mongooseschama);
+const mongoosemodel = mongoose.model("proatfolio1", mongooseschama);
 
 module.exports = mongoosemodel;

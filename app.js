@@ -4,21 +4,21 @@ let dbconnect = require("./src/middleware/db.mongo");
 let addtdatanew = require("./src/router/routerdata");
 const app = express();
 const bodyParser = require("body-parser");
-const cors = require('cors')
+const cors = require("cors");
 
 const port = process.env.port;
 
 app.use(bodyParser.json());
-app.use(cors())
+app.use(cors());
 
 // server sgtarting
 
-app.get("/api/server", (req, res) => {
-  setTimeout(() => {
-    const getalldata = res.send("server is starting");
-    console.log("check it", getalldata);
-  }, 5000);
-});
+// app.get("/api/server", (req, res) => {
+//   setTimeout(() => {
+//     const getalldata = res.send("server is starting");
+//     console.log("check it", getalldata);
+//   }, 5000);
+// });
 
 // api
 app.use("/api", addtdatanew);

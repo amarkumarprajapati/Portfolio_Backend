@@ -1,11 +1,50 @@
-let express = require("express");
-let mongoosemodel = require("../schema/mongo.schema");
+const express = require("express");
+const mongoosemodeluser = require("../schema/userhandle.schame");
+const axios = require("axios");
+const mongoosemodelall = require("../schema/servicedata.schama");
+const mongoosemodelhero = require("../schema/Hero");
+const jwt = require("jsonwebtoken");
+const secretKey = require("../config/jwt");
+const apiresponse = require("../middleware/api.response");
+const { v4: uuidv4 } = require("uuid");
 
-// add
+const fallbackSecretKey = "h6$RdP2qL@v8#eZuF9&w";
+
+// Ensure the secret key is valid
+const validSecretKey =
+  typeof secretKey === "string" && secretKey ? secretKey : fallbackSecretKey;
+
+// userlogin
+const userEnter = async (req, res) => {
+  try {
+    const userID = generateUserID();
+    const token = jwt.sign({ userID }, validSecretKey, {
+      expiresIn: "5050h",
+    });
+    const entranceTime = new Date().toISOString();
+    const userData = {
+      userID,
+      timeenter: entranceTime,
+      totaltimewait: "",
+    };
+
+    const newUser = new mongoosemodeluser(userData);
+    await newUser.save();
+    apiresponse.Created(req, res, token);
+  } catch (error) {
+    console.error("Error saving user data:", error);
+    apiresponse.servererror(req, res);
+  }
+};
+
+const generateUserID = () => {
+  return uuidv4();
+};
+
+// add queries
 let adddata = async (req, res) => {
-  
   let { name, email, message } = req.body;
-  let datatoadd = new mongoosemodel({
+  let datatoadd = new mongoosemodeluser({
     name,
     email,
     message,
@@ -13,83 +52,75 @@ let adddata = async (req, res) => {
   let savedata = await datatoadd.save();
   if (!savedata) {
     console.log("error to save");
-    return res.status(400).json({
-      message: "error",
-      savedata: savedata,
-    });
+    return apiresponse.Badresponce(req, res);
   }
-  res.status(200).json({
-    message: "success",
-    savedata: savedata,
-  });
+  apiresponse.Success(req, res);
 };
 
-let updateddata = async (req, res) => {
-  let { id } = req.params;
-  let { name, email_Id, message } = req.body;
-  let datatoupate = await mongoosemodel.findByIdAndUpdate(
-    id,
-    {
-      name,
-      email_Id,
-      message,
-    },
-    { new: true }
-  );
-  if (!datatoupate) {
-    console.log("error");
-    return res.status(404).json({
-      message: "updateerror",
-      datatoupate: datatoupate,
-    });
-  }
-  res.status(200).json({
-    message: "succes",
-    datatoupate: datatoupate,
-  });
-};
-
-// delete
-
-let deletedata = async (req, res) => {
-  let { id } = req.params;
-  let deleted = await mongoosemodel.findByIdAndDelete(id);
-  if (!deleted) {
-    console.log("error");
-    return res.status(404).json({
-      message: "error",
-      deleted: deleted,
-    });
-  }
-  res.status(200).json({
-    message: "success",
-    deleted: deleted,
-  });
-};
-
-// get
-let getdata = async (req, res) => {
-  let getalldata = await mongoosemodel.find();
+// get all data
+let getdataalldata = async (req, res) => {
+  const { Experience, Project, Clients } = req.query;
+  let filterdata = {};
+  if (Experience) filterdata.Experience = parseFloat(Experience);
+  if (Project) filterdata.Project = parseInt(Project);
+  if (Clients) filterdata.Clients = parseInt(Clients);
+  let getalldata = await mongoosemodeluser.find(filterdata);
   res.status(200).json({
     message: "success",
     getalldata: getalldata,
   });
 };
 
-// getsingle
-let getsingledata = async (req, res) => {
-  let { id } = req.params;
-  let getsingleddata = await mongoosemodel.findById(id);
+// get hero section data
+let getherosection = async (req, res) => {
+  let responcedata = await mongoosemodelhero.find();
   res.status(200).json({
-    message: "single data",
-    getsingleddata: [getsingleddata],
+    status: "true",
+    message: "success",
+    data: responcedata,
   });
+};
+
+// get service data
+let contentdata = async (req, res) => {
+  let getresponce = await mongoosemodelall.find();
+  if (!getresponce) {
+    return res.status(404).json(getdataalldata);
+  }
+  res.status(200).json({
+    status: "true",
+    message: "success data received",
+    your: getresponce,
+  });
+};
+
+// download cv
+let downloadcv = async (req, res, next) => {
+  try {
+    const response = await axios.get("https://easyupload.io/anlk4k", {
+      responseType: "arraybuffer",
+    });
+    const pdfContent = response.data;
+    res.setHeader("Content-Type", "application/pdf");
+    res.setHeader(
+      "Content-Disposition",
+      'attachment; filename="downloaded.pdf"'
+    );
+    res.status(200).send(pdfContent);
+  } catch (error) {
+    console.error("Error while fetching file:", error);
+    res.status(500).json({
+      status: "false",
+      message: "Internal server error",
+    });
+  }
 };
 
 module.exports = {
   adddata,
-  getdata,
-  updateddata,
-  getsingledata,
-  deletedata,
+  userEnter,
+  getdataalldata,
+  downloadcv,
+  contentdata,
+  getherosection,
 };
