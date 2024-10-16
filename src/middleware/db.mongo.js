@@ -13,5 +13,6 @@ const database = () => {
     .catch(() => {
       console.log(`error ${connectionstring}`);
     });
+    mongoose.set("debug",true)
 };
 module.exports = database;

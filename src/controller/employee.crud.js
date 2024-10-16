@@ -97,16 +97,23 @@ let contentdata = async (req, res) => {
 // download cv
 let downloadcv = async (req, res, next) => {
   try {
-    const response = await axios.get("https://easyupload.io/anlk4k", {
-      responseType: "arraybuffer",
-    });
+    // Fetch the PDF file from S3 bucket
+    const response = await axios.get(
+      "https://amarcv.s3.ap-south-1.amazonaws.com/Amar+Kumar+Prajapati_1.7_Full+Stack+Developer.pdf",
+      {
+        responseType: "arraybuffer", // Ensures the response is returned as binary data (Buffer)
+      }
+    );
+
     const pdfContent = response.data;
+
+    // Set headers for serving the PDF correctly
     res.setHeader("Content-Type", "application/pdf");
     res.setHeader(
       "Content-Disposition",
       'attachment; filename="downloaded.pdf"'
     );
-    res.status(200).send(pdfContent);
+    res.status(200).send(pdfContent); // Send the binary content (PDF)
   } catch (error) {
     console.error("Error while fetching file:", error);
     res.status(500).json({
