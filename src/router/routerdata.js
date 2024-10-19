@@ -1,5 +1,5 @@
 const express = require("express");
-const employeeController = require("../controller/employee.crud");
+const employeeController = require("../controller/Portfolio");
 const router = express.Router();
 
 router.post("/adddatanew", employeeController.adddata);

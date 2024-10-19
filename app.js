@@ -5,6 +5,7 @@ let addtdatanew = require("./src/router/routerdata");
 const app = express();
 const bodyParser = require("body-parser");
 const cors = require("cors");
+let projectimages = require("./src/router/getProjectimages");
 
 const port = process.env.port;
 
@@ -22,6 +23,7 @@ app.use(cors());
 
 // api
 app.use("/api", addtdatanew);
+app.use("/api/image", projectimages);
 
 // Database
 dbconnect();
