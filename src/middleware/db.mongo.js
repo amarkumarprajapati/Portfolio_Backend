@@ -2,7 +2,7 @@ let mongoose = require("mongoose");
 let dotenv = require("dotenv");
 require("dotenv").config();
 
-let connectionstring = process.env.mongodbconnect;
+let connectionstring = "mongodb+srv://amardatabase:amardatabase@cluster0.gjuunff.mongodb.net/portfolio"
 
 const database = () => {
   mongoose

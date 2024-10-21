@@ -7,19 +7,16 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 let projectimages = require("./src/router/getProjectimages");
 
-const port = process.env.port;
+const port = 2000;
 
 app.use(bodyParser.json());
 app.use(cors());
 
 // server sgtarting
 
-// app.get("/api/server", (req, res) => {
-//   setTimeout(() => {
-//     const getalldata = res.send("server is starting");
-//     console.log("check it", getalldata);
-//   }, 5000);
-// });
+app.get("/", (req, res) => {
+  res.send("Server is running");
+});
 
 // api
 app.use("/api", addtdatanew);
