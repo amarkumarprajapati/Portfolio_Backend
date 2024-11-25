@@ -31,7 +31,6 @@ Portfolio.userEnter = async (req, res) => {
     await newUser.save();
     apiresponse.Created(req, res, token);
   } catch (error) {
-    console.error("Error saving user data:", error);
     apiresponse.servererror(req, res);
   }
 };
@@ -50,7 +49,6 @@ Portfolio.adddata = async (req, res) => {
   });
   let savedata = await datatoadd.save();
   if (!savedata) {
-    console.log("error to save");
     return apiresponse.Badresponce(req, res);
   }
   apiresponse.Success(req, res);
@@ -112,7 +110,6 @@ Portfolio.downloadcv = async (req, res, next) => {
     );
     res.status(200).send(pdfContent);
   } catch (error) {
-    console.error("Error while fetching file:", error);
     res.status(500).json({
       status: "false",
       message: "Internal server error",
