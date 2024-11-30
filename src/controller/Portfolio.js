@@ -95,7 +95,7 @@ Portfolio.contentdata = async (req, res) => {
 Portfolio.downloadcv = async (req, res, next) => {
   try {
     const response = await axios.get(
-      "https://amarcv.s3.ap-south-1.amazonaws.com/Amar+Kumar+Prajapati_1.7_Full+Stack+Developer.pdf",
+      "https://amarcv.s3.ap-south-1.amazonaws.com/Amar+Kumar+Prajapati.pdf",
       {
         responseType: "arraybuffer",
       }
