@@ -6,8 +6,11 @@ const app = express();
 const bodyParser = require("body-parser");
 const cors = require("cors");
 let projectimages = require("./src/router/getProjectimages");
+const { config } = require("dotenv");
+let dotenv = config()
 
-const port = 2000;
+
+const port = process.env.port || 2000;
 
 app.use(bodyParser.json());
 app.use(cors());
