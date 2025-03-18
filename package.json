@@ -8,6 +8,7 @@
     "express": "^4.19.2",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.2.4",
+    "natural": "^8.0.1",
     "nodemon": "^3.1.0",
     "Schema_lilypads": "github:amarkumarwork/Schema_lilypads#main",
     "uuid": "^9.0.1"

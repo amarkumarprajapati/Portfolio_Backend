@@ -8,7 +8,7 @@ const cors = require("cors");
 let projectimages = require("./src/router/getProjectimages");
 const { config } = require("dotenv");
 let dotenv = config()
-
+let chatbotcheck = require('./src/router/chatbot')
 
 const port = process.env.port || 2000;
 
@@ -22,7 +22,7 @@ app.get("/", (req, res) => {
 });
 
 // api
-app.use("/api", addtdatanew);
+app.use('/api/',chatbotcheck)
 app.use("/api/image", projectimages);
 
 // Database
